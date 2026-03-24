@@ -1,16 +1,14 @@
 package GameDisplay;
 
-import GameBoard.*;
-import GameLogic.*;
 import Game.*;
 import Observers.KeyObserver;
 import Observers.Observer;
 
 import javax.swing.JFrame;
 
-public class JavaXSwingDisplay extends JFrame implements GameDisplay {
+public class JavaXSwingDisplay extends JFrame implements IGameDisplay, IDynamicSpeedDisplay {
 
-    private static final int INITIAL_SPEED = 150; //Game.Game Speed (ms)
+    private static final int INITIAL_SPEED = 150; //Game Speed (ms)
 
     private JavaXSwingPanel swingPanel;
     private Game game;
@@ -45,6 +43,12 @@ public class JavaXSwingDisplay extends JFrame implements GameDisplay {
     public void closeDisplay() {
         this.setVisible(false);
     }
+
+    @Override
+    public void changeSpeed(int speed) {
+        swingPanel.changeSpeed(speed);
+    }
+
 
     public JavaXSwingDisplay(Game game) {
         this.game = game;
