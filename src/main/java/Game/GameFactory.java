@@ -1,20 +1,18 @@
 package Game;
 
 import Game.Game.GameBuilder;
-import GameLogic.*;
-import GameBoard.*;
-import GameDisplay.*;
 
 public class GameFactory {
 
-    public Game newStandardGame() {
-        int STANDARD_BOARD_SIZE = 30;
+    private final int STANDARD_BOARD_SIZE = 30;
+    private final int TEXT_BASED_BOARD_SIZE = 30;
 
+    public Game newStandardGame() {
         return new GameBuilder()
                 .addStandardGameLogic()
                 .addSquareGameBoard(30)
-                .addJavaXSwingDisplay()
                 .addStandardSnake()
+                .addJavaXSwingDisplay()
                 .build();
     }
 
