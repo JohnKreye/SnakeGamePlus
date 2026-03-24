@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JavaXSwingPanel extends JPanel implements DynamicSpeedDisplay {
+public class JavaXSwingPanel extends JPanel implements IDynamicSpeedDisplay {
 
     private static final int TILE_SIZE = 25;
     private final int SCORE_X_OFFSET = 10;

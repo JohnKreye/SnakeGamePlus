@@ -3,7 +3,6 @@ package GameBoard;
 import Game.*;
 import GameObject.GameObject;
 import Observers.Observer;
-import Snake.Snake;
 
 import java.awt.*;
 import java.util.ArrayList;

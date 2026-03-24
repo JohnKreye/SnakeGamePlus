@@ -8,7 +8,7 @@ import Snake.*;
 public class Game {
     public GameLogic gameLogic;
     public GameBoard gameBoard;
-    public GameDisplay gameDisplay;
+    public IGameDisplay gameDisplay;
     public Snake snake;
 
     protected Game() {}
@@ -72,8 +72,8 @@ public class Game {
             return this;
         }
 
-        public GameBuilder addGameDisplay(GameDisplay gameDisplay) {
-            newGame.gameDisplay = gameDisplay;
+        public GameBuilder addGameDisplay(IGameDisplay IGameDisplay) {
+            newGame.gameDisplay = IGameDisplay;
             return this;
         }
 

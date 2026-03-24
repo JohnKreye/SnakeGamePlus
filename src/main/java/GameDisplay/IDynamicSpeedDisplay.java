@@ -1,5 +1,5 @@
 package GameDisplay;
 
-public interface DynamicSpeedDisplay {
+public interface IDynamicSpeedDisplay {
     public void changeSpeed(int speed);
 }

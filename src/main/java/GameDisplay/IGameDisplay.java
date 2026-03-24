@@ -1,7 +1,6 @@
 package GameDisplay;
-import Game.*;
 
-public interface GameDisplay {
+public interface IGameDisplay {
 
     public void startDisplay();
     public void updateDisplay();
