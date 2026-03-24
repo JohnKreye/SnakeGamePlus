@@ -36,9 +36,6 @@ public class Snake {
 
     }
 
-    public List<Color> getColorPattern() { return colorPattern; }
-
-
     public void move() {
         Point head = body.getFirst();
         Point newHead = new Point(head);
@@ -64,22 +61,22 @@ public class Snake {
         growTicks += growthAmount;
     }
 
-    public void setNextDirection(Direction direction) {
+    public boolean setNextDirection(Direction direction) {
         // Prevent 180-degree turns
         if ((this.currentDirection == Direction.UP && direction == Direction.DOWN) ||
                 (this.currentDirection == Direction.DOWN && direction == Direction.UP) ||
                 (this.currentDirection == Direction.LEFT && direction == Direction.RIGHT) ||
                 (this.currentDirection == Direction.RIGHT && direction == Direction.LEFT)) {
-            return;
+            return false;
         }
         this.nextDirection = direction;
+        return true;
     }
 
-    public LinkedList<Point> getBodyPositions() {
-        return body;
-    }
+    public List<Color> getColorPattern() { return colorPattern; }
+    public Direction getDirection() { return currentDirection; }
+    public LinkedList<Point> getBodyPositions() { return body; }
+    public Point getHead() { return body.getFirst(); }
+    public int getSize() { return body.size() + growTicks; }
 
-    public Point getHead() {
-        return body.getFirst();
-    }
 }
