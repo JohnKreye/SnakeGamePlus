@@ -18,8 +18,8 @@ public class JavaXSwingPanel extends JPanel implements IDynamicSpeedDisplay {
     private final int SCORE_X_OFFSET = 10;
     private final int SCORE_Y_OFFSET = 20;
 
-    private List<KeyObserver> keyObservers = new ArrayList<>();
-    private List<Observer> observers = new ArrayList<>();
+    private List<IKeyObserver> keyObservers = new ArrayList<>();
+    private List<IObserver> observers = new ArrayList<>();
     private final int gridWidth;
     private final int gridHeight;
 
@@ -122,30 +122,30 @@ public class JavaXSwingPanel extends JPanel implements IDynamicSpeedDisplay {
     }
 
     private void notifyKeyObservers(KeyEvent event) {
-        for(KeyObserver keyObserver : keyObservers) {
+        for(IKeyObserver keyObserver : keyObservers) {
             keyObserver.keyPressed(event);
         }
     }
 
     public void notifyObservers() {
-        for(Observer observer : observers) {
+        for(IObserver observer : observers) {
             observer.update();
         }
     }
 
-    public void addKeyObserver(KeyObserver keyObserver) {
+    public void addKeyObserver(IKeyObserver keyObserver) {
         keyObservers.add(keyObserver);
     }
 
-    public void addObserver(Observer observer) {
+    public void addObserver(IObserver observer) {
         observers.add(observer);
     }
 
-    public void removeKeyObserver(KeyObserver keyObserver) {
+    public void removeKeyObserver(IKeyObserver keyObserver) {
         keyObservers.remove(keyObserver);
     }
 
-    public void removeObserver(Observer observer) {
+    public void removeObserver(IObserver observer) {
         observers.remove(observer);
     }
 

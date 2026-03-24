@@ -2,7 +2,7 @@ package GameBoard;
 
 import Game.*;
 import GameObject.GameObject;
-import Observers.Observer;
+import Observers.IObserver;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public abstract class GameBoard implements Observer {
+public abstract class GameBoard implements IObserver {
 
     protected int boardWidth;
     protected int boardHeight;

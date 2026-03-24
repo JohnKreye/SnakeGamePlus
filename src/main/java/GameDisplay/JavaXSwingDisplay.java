@@ -1,8 +1,8 @@
 package GameDisplay;
 
 import Game.*;
-import Observers.KeyObserver;
-import Observers.Observer;
+import Observers.IKeyObserver;
+import Observers.IObserver;
 
 import javax.swing.JFrame;
 
@@ -19,8 +19,8 @@ public class JavaXSwingDisplay extends JFrame implements IGameDisplay, IDynamicS
         if(firstStart) {
             swingPanel = new JavaXSwingPanel(game, INITIAL_SPEED);
             add(swingPanel);
-            swingPanel.addKeyObserver((KeyObserver) game.gameLogic);
-            swingPanel.addObserver((Observer) game.gameBoard);
+            swingPanel.addKeyObserver((IKeyObserver) game.gameLogic);
+            swingPanel.addObserver((IObserver) game.gameBoard);
 
             pack();
             setLocationRelativeTo(null); // Center on screen

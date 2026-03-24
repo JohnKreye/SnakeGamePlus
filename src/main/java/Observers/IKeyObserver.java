@@ -2,6 +2,6 @@ package Observers;
 
 import java.awt.event.KeyEvent;
 
-public interface KeyObserver {
+public interface IKeyObserver {
     public void keyPressed(KeyEvent event);
 }

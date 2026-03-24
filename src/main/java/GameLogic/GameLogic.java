@@ -4,12 +4,12 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import Game.*;
 import GameObject.*;
-import Observers.KeyObserver;
+import Observers.IKeyObserver;
 import Snake.Snake;
 import java.util.List;
 import java.util.Random;
 
-public abstract class GameLogic implements KeyObserver {
+public abstract class GameLogic implements IKeyObserver {
 
     protected static int STARTING_SCORE = 0;
 
