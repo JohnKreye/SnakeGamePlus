@@ -17,7 +17,7 @@ public class Game {
         gameLogic.playGame();
     }
 
-    protected static class GameBuilder {
+    public static class GameBuilder {
         private Game newGame;
 
         public GameBuilder() {
@@ -39,6 +39,11 @@ public class Game {
 
         }
 
+        //No safety checks: used for testing
+        public Game forceBuild() {
+            return newGame;
+        }
+
         private void throwIncompleteBuildRuntimeException(boolean logicNull, boolean boardNull, boolean displayNull, boolean snakeNull) {
             String exceptionString = "Error: Incomplete game build attempted: ";
             exceptionString += (logicNull) ? "gameLogic" : "";
@@ -55,6 +60,26 @@ public class Game {
             exceptionString += " was not assigned.";
 
             throw new RuntimeException(exceptionString);
+        }
+
+        public GameBuilder addGameLogic(GameLogic gameLogic) {
+            newGame.gameLogic = gameLogic;
+            return this;
+        }
+
+        public GameBuilder addGameBoard(GameBoard gameBoard) {
+            newGame.gameBoard = gameBoard;
+            return this;
+        }
+
+        public GameBuilder addGameDisplay(GameDisplay gameDisplay) {
+            newGame.gameDisplay = gameDisplay;
+            return this;
+        }
+
+        public GameBuilder addSnake(Snake snake) {
+            newGame.snake = snake;
+            return this;
         }
 
         public GameBuilder addStandardGameLogic() {
