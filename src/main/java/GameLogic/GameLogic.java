@@ -27,7 +27,9 @@ public abstract class GameLogic implements KeyObserver {
     }
 
     public void playGame() {
-        game.gameDisplay.startDisplay();
+        if(game.gameDisplay != null) {
+            game.gameDisplay.startDisplay();
+        }
     }
 
     @Override
