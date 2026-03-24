@@ -1,10 +1,7 @@
 package GameDisplay;
 
-import GameBoard.*;
-import GameLogic.*;
 import GameObject.*;
 import Game.*;
-import GameDisplay.*;
 import Observers.*;
 import Snake.*;
 
@@ -18,6 +15,8 @@ import java.util.List;
 public class JavaXSwingPanel extends JPanel implements DynamicSpeedDisplay {
 
     private static final int TILE_SIZE = 25;
+    private final int SCORE_X_OFFSET = 10;
+    private final int SCORE_Y_OFFSET = 20;
 
     private List<KeyObserver> keyObservers = new ArrayList<>();
     private List<Observer> observers = new ArrayList<>();
@@ -29,6 +28,7 @@ public class JavaXSwingPanel extends JPanel implements DynamicSpeedDisplay {
 
     @Override
     protected void paintComponent(Graphics graphics) {
+        FontMetrics fontMetrics = graphics.getFontMetrics();
         super.paintComponent(graphics);
 
         //Draw GameObjects
@@ -57,15 +57,29 @@ public class JavaXSwingPanel extends JPanel implements DynamicSpeedDisplay {
 
         // Draw Game.Game Over & Score
         graphics.setColor(Color.WHITE);
-        graphics.drawString("Score: " + game.gameLogic.getScore(), 10, 20);
+
+
+
+        graphics.drawString("Score: " + game.gameLogic.getScore(), SCORE_X_OFFSET, SCORE_Y_OFFSET);
 
         if (game.gameLogic.gameIsOver()) {
-            graphics.drawString("GAME OVER", (gridHeight * TILE_SIZE) / 2 - 35, (gridWidth * TILE_SIZE) / 2);
-        }
+            String gameOver = "GAME OVER";
+            String pressSpace = "PRESS SPACE TO RESTART";
+            graphics.drawString(gameOver, (getDisplayHeight() - fontMetrics.stringWidth(gameOver))/ 2, (getDisplayWidth()) / 2);
+            graphics.drawString(pressSpace, (getDisplayHeight() - fontMetrics.stringWidth(pressSpace)) / 2, (int) (getDisplayWidth() / 2 + fontMetrics.getHeight()*1.5));        }
 
         else if (game.gameLogic.gameIsPaused()) {
-            graphics.drawString("GAME PAUSED", (gridHeight * TILE_SIZE) / 2 - 35, (gridWidth * TILE_SIZE) / 2);
+            String gamePaused = "GAME PAUSED";
+            graphics.drawString(gamePaused, (getDisplayHeight() - fontMetrics.stringWidth(gamePaused)) / 2, (getDisplayWidth()) / 2);
         }
+    }
+
+    private int getDisplayWidth() {
+        return gridWidth * TILE_SIZE;
+    }
+
+    private int getDisplayHeight() {
+        return gridHeight * TILE_SIZE;
     }
 
     @Override
