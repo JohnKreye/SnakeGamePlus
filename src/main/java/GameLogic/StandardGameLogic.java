@@ -1,10 +1,6 @@
 package GameLogic;
 import Game.*;
-import GameObject.GameObject;
 import GameObject.*;
-
-import java.awt.*;
-import java.util.Random;
 
 public class StandardGameLogic extends GameLogic {
 
@@ -14,7 +10,7 @@ public class StandardGameLogic extends GameLogic {
 
     @Override
     public void playGame() {
-        game.gameBoard.addGameObject(new StandardFood(getRandomPosition()));
+        game.gameBoard.addGameObject(new StandardFood(game.gameBoard.getRandomValidPosition()));
         super.playGame();
     }
 
@@ -27,7 +23,7 @@ public class StandardGameLogic extends GameLogic {
     @Override
     public void removeConsumableObject(ConsumeableObject consumeableObject) {
         super.removeConsumableObject(consumeableObject);
-        game.gameBoard.addGameObject(new StandardFood(getRandomPosition()));
+        game.gameBoard.addGameObject(new StandardFood(game.gameBoard.getRandomValidPosition()));
     }
 
 }

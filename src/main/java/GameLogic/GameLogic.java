@@ -94,15 +94,4 @@ public abstract class GameLogic implements IKeyObserver {
     public void addScore(int score) {
         this.score += score;
     }
-
-    protected Point getRandomPosition() {
-        int positionX = random.nextInt(0, game.gameBoard.getWidth());
-        int positionY = random.nextInt(0, game.gameBoard.getHeight());
-        Point newPoint = new Point(positionX,positionY);
-        
-        if (game.snake.getHead().equals(newPoint))
-            return getRandomPosition();
-        else
-            return new Point(positionX,positionY);
-    }
 }
