@@ -101,5 +101,10 @@ public class Game {
             newGame.snake = new Snake(newGame);
             return this;
         }
+
+        public GameBuilder addRingGameBoard(int boardWidth, int boardHeight) {
+            newGame.gameBoard = new RingGameBoard(boardWidth, boardHeight, newGame);
+            return  this;
+        }
     }
 }

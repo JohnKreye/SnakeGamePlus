@@ -21,9 +21,13 @@ public abstract class GameBoard implements IObserver {
         this.game = game;
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
+        constructGameBoard(boardWidth, boardHeight);
+    }
+
+    protected void constructGameBoard(int boardWidth, int boardHeight) {
         for(int row = 0; row < boardHeight; row++) {
             int column = 0;
-            for(; column < boardWidth; column += 5) {
+            for(; column < boardWidth - 5; column += 5) {
                 validPointMap.put(new Point(row, column + 0), true);
                 validPointMap.put(new Point(row, column + 1), true);
                 validPointMap.put(new Point(row, column + 2), true);

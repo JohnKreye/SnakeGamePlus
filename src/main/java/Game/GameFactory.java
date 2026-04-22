@@ -16,4 +16,13 @@ public class GameFactory {
                 .build();
     }
 
+    public Game newRingGame() {
+        return new GameBuilder()
+                .addStandardGameLogic()
+                .addRingGameBoard(30, 30)
+                .addStandardSnake()
+                .addJavaXSwingDisplay()
+                .build();
+    }
+
 }

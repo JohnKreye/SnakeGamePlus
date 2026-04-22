@@ -31,15 +31,60 @@ public class JavaXSwingPanel extends JPanel implements IDynamicSpeedDisplay {
         FontMetrics fontMetrics = graphics.getFontMetrics();
         super.paintComponent(graphics);
 
-        //Draw GameObjects
-        List<GameObject> gameObjects = game.gameBoard.getGameObjects();
-        for (GameObject gameObject : gameObjects) {
-            graphics.setColor(gameObject.getColor());
-            Point objectPosition = gameObject.getPosition();
-            graphics.fillRect(objectPosition.x * TILE_SIZE, objectPosition.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-        }
+        drawValidTiles(graphics);
+        drawGameObjects(graphics);
+        drawSnake(graphics);
+        drawText(graphics, fontMetrics);
 
-        //Draw Snake.Snake
+    }
+
+    private void drawValidTiles(Graphics graphics) {
+        List<Point> validPoints = game.gameBoard.getValidPositions();
+        int size = validPoints.size();
+        int index = 0;
+        for(; index < size - 5; index += 5) {
+            drawValidTile(validPoints.get(index + 0), graphics);
+            drawValidTile(validPoints.get(index + 1), graphics);
+            drawValidTile(validPoints.get(index + 2), graphics);
+            drawValidTile(validPoints.get(index + 3), graphics);
+            drawValidTile(validPoints.get(index + 4), graphics);
+        }
+        index -= 5;
+        for(; index < size; index ++) {
+            drawValidTile(validPoints.get(index), graphics);
+        }
+    }
+
+    private void drawValidTile(Point point, Graphics graphics) {
+        //even summed coordinates will have different color from odd summed coordinates
+        //in other words a checkered pattern
+        Color color1 = Color.DARK_GRAY.darker();
+        Color color2 = color1.darker();
+        int coordinateSum = point.x + point.y;
+
+        if(coordinateSum % 2 == 0)
+            drawPoint(point, color1, graphics);
+        else
+            drawPoint(point, color2, graphics);
+    }
+
+    private void drawText(Graphics graphics, FontMetrics fontMetrics) {
+        graphics.setColor(Color.WHITE);
+        graphics.drawString("Score: " + game.gameLogic.getScore(), SCORE_X_OFFSET, SCORE_Y_OFFSET);
+
+        if (game.gameLogic.gameIsOver()) {
+            String gameOver = "GAME OVER";
+            String pressSpace = "PRESS SPACE TO RESTART";
+            graphics.drawString(gameOver, (getDisplayHeight() - fontMetrics.stringWidth(gameOver))/ 2, (getDisplayWidth()) / 2);
+            graphics.drawString(pressSpace, (getDisplayHeight() - fontMetrics.stringWidth(pressSpace)) / 2, (int) (getDisplayWidth() / 2 + fontMetrics.getHeight()*1.5));        }
+
+        else if (game.gameLogic.gameIsPaused()) {
+            String gamePaused = "GAME PAUSED";
+            graphics.drawString(gamePaused, (getDisplayHeight() - fontMetrics.stringWidth(gamePaused)) / 2, (getDisplayWidth()) / 2);
+        }
+    }
+
+    private void drawSnake(Graphics graphics) {
         Snake snake = game.snake;
         List<Color> snakeColorPattern = snake.getColorPattern();
         int totalColors = snakeColorPattern.size();
@@ -54,24 +99,19 @@ public class JavaXSwingPanel extends JPanel implements IDynamicSpeedDisplay {
                 colorIndex = 0;
             }
         }
+    }
 
-        // Draw Game.Game Over & Score
-        graphics.setColor(Color.WHITE);
-
-
-
-        graphics.drawString("Score: " + game.gameLogic.getScore(), SCORE_X_OFFSET, SCORE_Y_OFFSET);
-
-        if (game.gameLogic.gameIsOver()) {
-            String gameOver = "GAME OVER";
-            String pressSpace = "PRESS SPACE TO RESTART";
-            graphics.drawString(gameOver, (getDisplayHeight() - fontMetrics.stringWidth(gameOver))/ 2, (getDisplayWidth()) / 2);
-            graphics.drawString(pressSpace, (getDisplayHeight() - fontMetrics.stringWidth(pressSpace)) / 2, (int) (getDisplayWidth() / 2 + fontMetrics.getHeight()*1.5));        }
-
-        else if (game.gameLogic.gameIsPaused()) {
-            String gamePaused = "GAME PAUSED";
-            graphics.drawString(gamePaused, (getDisplayHeight() - fontMetrics.stringWidth(gamePaused)) / 2, (getDisplayWidth()) / 2);
+    private void drawGameObjects(Graphics graphics) {
+        List<GameObject> gameObjects = game.gameBoard.getGameObjects();
+        for (GameObject gameObject : gameObjects) {
+            Point objectPosition = gameObject.getPosition();
+            drawPoint(objectPosition, gameObject.getColor(), graphics);
         }
+    }
+
+    private void drawPoint(Point point, Color color, Graphics graphics) {
+        graphics.setColor(color);
+        graphics.fillRect(point.x * TILE_SIZE, point.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
     }
 
     private int getDisplayWidth() {
