@@ -1,7 +1,6 @@
 package GameObject;
 
 import GameBoard.GameBoard;
-import Snake.Snake;
 
 import java.awt.*;
 import Game.*;
