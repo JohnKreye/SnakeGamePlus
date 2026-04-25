@@ -3,14 +3,21 @@ import Game.*;
 import GameObject.*;
 
 public class StandardGameLogic extends GameLogic {
+    private static int STANDARD_FOOD_GROWTH_AMOUNT = 1;
+    private int foodGrowthAmount;
 
     public StandardGameLogic(Game game) {
+        this(game, STANDARD_FOOD_GROWTH_AMOUNT);
+    }
+
+    public StandardGameLogic(Game game, int foodGrowthAmount) {
+        this.foodGrowthAmount = foodGrowthAmount;
         super(game);
     }
 
     @Override
     public void playGame() {
-        game.gameBoard.addGameObject(new StandardFood(game.gameBoard.getRandomValidPosition()));
+        game.gameBoard.addGameObject(new StandardFood(game.gameBoard.getRandomFreePosition()));
         super.playGame();
     }
 
@@ -23,7 +30,11 @@ public class StandardGameLogic extends GameLogic {
     @Override
     public void removeConsumableObject(ConsumeableObject consumeableObject) {
         super.removeConsumableObject(consumeableObject);
-        game.gameBoard.addGameObject(new StandardFood(game.gameBoard.getRandomValidPosition()));
+    }
+
+    @Override
+    protected void addScoreAction() {
+        game.gameBoard.addGameObject(new StandardFood(game.gameBoard.getRandomFreePosition()));
     }
 
 }
