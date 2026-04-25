@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public abstract class GameBoard implements IObserver {
+public class GameBoard implements IObserver {
 
     protected int boardWidth;
     protected int boardHeight;
@@ -28,27 +28,25 @@ public abstract class GameBoard implements IObserver {
         for(int row = 0; row < boardHeight; row++) {
             int column = 0;
             for(; column < boardWidth - 5; column += 5) {
-                validPointMap.put(new Point(row, column + 0), true);
-                validPointMap.put(new Point(row, column + 1), true);
-                validPointMap.put(new Point(row, column + 2), true);
-                validPointMap.put(new Point(row, column + 3), true);
-                validPointMap.put(new Point(row, column + 4), true);
+                validPointMap.put(new Point(column + 0, row), true);
+                validPointMap.put(new Point(column + 1, row), true);
+                validPointMap.put(new Point(column + 2, row), true);
+                validPointMap.put(new Point(column + 3, row), true);
+                validPointMap.put(new Point(column + 4, row), true);
             }
-            column -= 5;
             for(; column < boardWidth; column++) {
-                validPointMap.put(new Point(row, column), true);
+                validPointMap.put(new Point(column, row), true);
             }
         }
     }
 
     @Override
     public void update() {
-        if (game.gameLogic.gameIsOver())
-            return;
-
-        game.snake.move();
-        game.gameLogic.checkCollisions();
-        game.gameLogic.checkGameObjects();
+        if (!(game.gameLogic.gameIsOver() || game.gameLogic.gameIsPaused())) {
+            game.snake.move();
+            game.gameLogic.checkCollisions();
+            game.gameLogic.checkGameObjects();
+        }
 
         game.gameDisplay.updateDisplay();
     }
@@ -71,10 +69,12 @@ public abstract class GameBoard implements IObserver {
     public void clearGameObjects() { gameObjectMap = new HashMap<>(); }
 
     public List<Point> getValidPositions() {
-        return validPointMap.entrySet().stream()
-                .filter(Map.Entry::getValue)
-                .map(Map.Entry::getKey)
-                .toList();
+        return new ArrayList<>(
+            validPointMap.entrySet().stream()
+            .filter(Map.Entry::getValue)
+            .map(Map.Entry::getKey)
+            .toList()
+        );
     }
 
     public boolean isValidPosition(Point point) {
@@ -90,16 +90,20 @@ public abstract class GameBoard implements IObserver {
         return gameObjectMap.containsKey(point);
     }
 
-    public Point getRandomValidPosition() {
+    public Point getRandomFreePosition() {
 
         List<Point> validPoints = getValidPositions();
 
-        int randomIndex = random.nextInt(0, validPoints.size());
+        int randomIndex = random.nextInt(validPoints.size());
         Point randomPoint = validPoints.get(randomIndex);
 
         if (snakeOnPoint(randomPoint) || objectOnPoint(randomPoint))
-            return getRandomValidPosition();
+            return getRandomFreePosition();
         else
             return randomPoint;
     }
+
+    //needed by some boards, but not all
+    public void restart() {}
+
 }
