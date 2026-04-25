@@ -4,9 +4,6 @@ import Game.Game.GameBuilder;
 
 public class GameFactory {
 
-    private final int STANDARD_BOARD_SIZE = 30;
-    private final int TEXT_BASED_BOARD_SIZE = 30;
-
     public Game newStandardGame() {
         return new GameBuilder()
                 .addStandardGameLogic()
@@ -16,13 +13,25 @@ public class GameFactory {
                 .build();
     }
 
-    public Game newRingGame() {
+    public Game newRampUpGame() {
         return new GameBuilder()
-                .addStandardGameLogic()
-                .addRingGameBoard(30, 30)
+                .addObstacleDodgeLogic()
+                .addRingGameBoard(45, 35)
+                .addAcceleratingSnake()
+                .addJavaXSwingDisplay()
+                .build();
+    }
+
+    public Game newMazeCrawlerGame() {
+        return new GameBuilder()
+                .addQuickGrowGameLogic()
+                .addMazeGameBoard(19,19,3)
                 .addStandardSnake()
                 .addJavaXSwingDisplay()
                 .build();
     }
 
+    public Game newChaosGame() {
+        return new GameBuilder().createNewChaosGame();
+    }
 }
