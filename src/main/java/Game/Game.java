@@ -11,10 +11,18 @@ public class Game {
     public IGameDisplay gameDisplay;
     public Snake snake;
 
+    private boolean directionQueued = false;
+    private Snake.Direction queuedDirection = Snake.Direction.RIGHT;
+
     protected Game() {}
 
     public void playGame() {
         gameLogic.playGame();
+    }
+
+    public void queueSnakeDirectionChange(Snake.Direction direction) {
+        queuedDirection = direction;
+        directionQueued = true;
     }
 
     public static class GameBuilder {
@@ -33,6 +41,11 @@ public class Game {
 
             if(logicNull || boardNull || displayNull | snakeNull) {
                 throwIncompleteBuildRuntimeException(logicNull, boardNull, displayNull, snakeNull);
+            }
+
+            if(newGame.directionQueued) {
+                newGame.snake.setNextDirection(newGame.queuedDirection);
+                newGame.directionQueued = false;
             }
 
             return newGame;
@@ -61,24 +74,8 @@ public class Game {
 
             throw new RuntimeException(exceptionString);
         }
-
-        public GameBuilder addGameLogic(GameLogic gameLogic) {
-            newGame.gameLogic = gameLogic;
-            return this;
-        }
-
-        public GameBuilder addGameBoard(GameBoard gameBoard) {
-            newGame.gameBoard = gameBoard;
-            return this;
-        }
-
-        public GameBuilder addGameDisplay(IGameDisplay IGameDisplay) {
-            newGame.gameDisplay = IGameDisplay;
-            return this;
-        }
-
-        public GameBuilder addSnake(Snake snake) {
-            newGame.snake = snake;
+        public GameBuilder addGameBoard(int boardWidth, int boardHeight) {
+            newGame.gameBoard = new GameBoard(boardWidth, boardHeight, newGame);
             return this;
         }
 
@@ -104,7 +101,32 @@ public class Game {
 
         public GameBuilder addRingGameBoard(int boardWidth, int boardHeight) {
             newGame.gameBoard = new RingGameBoard(boardWidth, boardHeight, newGame);
-            return  this;
+            return this;
+        }
+
+        public GameBuilder addObstacleDodgeLogic() {
+            newGame.gameLogic = new ObstacleDodgeGameLogic(newGame);
+            return this;
+        }
+
+        public GameBuilder addAcceleratingSnake() {
+            newGame.snake = new AcceleratingSnake(newGame);
+            return this;
+        }
+
+        public GameBuilder addMazeGameBoard(int boardWidth, int boardHeight, int tunnelWidth) {
+            newGame.gameBoard = new MazeGameBoard(boardWidth, boardHeight, tunnelWidth, newGame);
+            return this;
+        }
+
+        public GameBuilder addQuickGrowGameLogic() {
+            newGame.gameLogic = new StandardGameLogic(newGame, 5);
+            return this;
+        }
+
+        public Game createNewChaosGame() {
+            newGame.gameLogic = new ChaosGameLogic(newGame);
+            return build();
         }
     }
 }
