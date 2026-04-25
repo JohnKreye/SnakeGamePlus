@@ -9,27 +9,22 @@ import javax.swing.JFrame;
 public class JavaXSwingDisplay extends JFrame implements IGameDisplay, IDynamicSpeedDisplay {
 
     private static final int INITIAL_SPEED = 150; //Game Speed (ms)
+    private int speed = INITIAL_SPEED;
 
     private JavaXSwingPanel swingPanel;
     private Game game;
-    private boolean firstStart = true;
 
     @Override
     public void startDisplay() {
-        if(firstStart) {
-            swingPanel = new JavaXSwingPanel(game, INITIAL_SPEED);
-            add(swingPanel);
-            swingPanel.addKeyObserver((IKeyObserver) game.gameLogic);
-            swingPanel.addObserver((IObserver) game.gameBoard);
+        swingPanel = new JavaXSwingPanel(game, INITIAL_SPEED);
+        add(swingPanel);
+        swingPanel.addKeyObserver((IKeyObserver) game.gameLogic);
+        swingPanel.addObserver((IObserver) game.gameBoard);
+        this.revalidate();
+        this.repaint();
 
-            pack();
-            setLocationRelativeTo(null); // Center on screen
-
-            firstStart = false;
-        }
-        else {
-            swingPanel.changeSpeed(INITIAL_SPEED);
-        }
+        pack();
+        setLocationRelativeTo(null); // Center on screen
 
         this.setVisible(true);
     }
@@ -41,12 +36,26 @@ public class JavaXSwingDisplay extends JFrame implements IGameDisplay, IDynamicS
 
     @Override
     public void closeDisplay() {
-        this.setVisible(false);
+        swingPanel.close();
+        remove(swingPanel);
+        this.dispose();
+    }
+
+    @Override
+    public void restartDisplay() {
+        changeSpeed(INITIAL_SPEED);
+        swingPanel.restart();
     }
 
     @Override
     public void changeSpeed(int speed) {
         swingPanel.changeSpeed(speed);
+        this.speed = speed;
+    }
+
+    @Override
+    public int getSpeed() {
+        return speed;
     }
 
 
@@ -55,7 +64,5 @@ public class JavaXSwingDisplay extends JFrame implements IGameDisplay, IDynamicS
         setTitle("Snake Game Plus");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-
-
     }
 }

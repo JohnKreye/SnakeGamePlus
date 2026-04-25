@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JavaXSwingPanel extends JPanel implements IDynamicSpeedDisplay {
+public class JavaXSwingPanel extends JPanel {
 
     private static final int TILE_SIZE = 25;
     private final int SCORE_X_OFFSET = 10;
@@ -20,8 +20,8 @@ public class JavaXSwingPanel extends JPanel implements IDynamicSpeedDisplay {
 
     private List<IKeyObserver> keyObservers = new ArrayList<>();
     private List<IObserver> observers = new ArrayList<>();
-    private final int gridWidth;
-    private final int gridHeight;
+    private int gridWidth;
+    private int gridHeight;
 
     private Timer timer;
     private Game game;
@@ -49,7 +49,6 @@ public class JavaXSwingPanel extends JPanel implements IDynamicSpeedDisplay {
             drawValidTile(validPoints.get(index + 3), graphics);
             drawValidTile(validPoints.get(index + 4), graphics);
         }
-        index -= 5;
         for(; index < size; index ++) {
             drawValidTile(validPoints.get(index), graphics);
         }
@@ -62,6 +61,7 @@ public class JavaXSwingPanel extends JPanel implements IDynamicSpeedDisplay {
         Color color2 = color1.darker();
         int coordinateSum = point.x + point.y;
 
+
         if(coordinateSum % 2 == 0)
             drawPoint(point, color1, graphics);
         else
@@ -73,14 +73,14 @@ public class JavaXSwingPanel extends JPanel implements IDynamicSpeedDisplay {
         graphics.drawString("Score: " + game.gameLogic.getScore(), SCORE_X_OFFSET, SCORE_Y_OFFSET);
 
         if (game.gameLogic.gameIsOver()) {
-            String gameOver = "GAME OVER";
+            String gameOver = "GAME OVER : SCORE " + game.gameLogic.getScore();
             String pressSpace = "PRESS SPACE TO RESTART";
-            graphics.drawString(gameOver, (getDisplayHeight() - fontMetrics.stringWidth(gameOver))/ 2, (getDisplayWidth()) / 2);
-            graphics.drawString(pressSpace, (getDisplayHeight() - fontMetrics.stringWidth(pressSpace)) / 2, (int) (getDisplayWidth() / 2 + fontMetrics.getHeight()*1.5));        }
+            graphics.drawString(gameOver, (getDisplayWidth() - fontMetrics.stringWidth(gameOver))/ 2, (getDisplayHeight()) / 2);
+            graphics.drawString(pressSpace, (getDisplayWidth() - fontMetrics.stringWidth(pressSpace)) / 2, (int) (getDisplayHeight() / 2 + fontMetrics.getHeight()*1.5));        }
 
         else if (game.gameLogic.gameIsPaused()) {
             String gamePaused = "GAME PAUSED";
-            graphics.drawString(gamePaused, (getDisplayHeight() - fontMetrics.stringWidth(gamePaused)) / 2, (getDisplayWidth()) / 2);
+            graphics.drawString(gamePaused, (getDisplayWidth() - fontMetrics.stringWidth(gamePaused)) / 2, (getDisplayHeight()) / 2);
         }
     }
 
@@ -91,8 +91,7 @@ public class JavaXSwingPanel extends JPanel implements IDynamicSpeedDisplay {
         int colorIndex = 0;
 
         for (Point bodyPartPosition : snake.getBodyPositions()) {
-            graphics.setColor(snakeColorPattern.get(colorIndex));
-            graphics.fillRect(bodyPartPosition.x * TILE_SIZE, bodyPartPosition.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            drawPoint(bodyPartPosition, snakeColorPattern.get(colorIndex), graphics);
             colorIndex ++;
 
             if (colorIndex >= totalColors) {
@@ -110,6 +109,7 @@ public class JavaXSwingPanel extends JPanel implements IDynamicSpeedDisplay {
     }
 
     private void drawPoint(Point point, Color color, Graphics graphics) {
+        point = new Point(point.x + 1, point.y +1); //added a black border, so everything will be offset
         graphics.setColor(color);
         graphics.fillRect(point.x * TILE_SIZE, point.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
     }
@@ -122,15 +122,14 @@ public class JavaXSwingPanel extends JPanel implements IDynamicSpeedDisplay {
         return gridHeight * TILE_SIZE;
     }
 
-    @Override
     public void changeSpeed(int speed) {
         setGameSpeed(speed);
     }
 
     public JavaXSwingPanel(Game game, int refreshSpeed) {
         this.game = game;
-        this.gridWidth = game.gameBoard.getWidth();
-        this.gridHeight = game.gameBoard.getHeight();
+        this.gridWidth = game.gameBoard.getWidth()+2;
+        this.gridHeight = game.gameBoard.getHeight()+2;
 
         setPreferredSize(new Dimension(gridWidth * TILE_SIZE, gridHeight * TILE_SIZE));
         setBackground(Color.BLACK);
@@ -147,18 +146,32 @@ public class JavaXSwingPanel extends JPanel implements IDynamicSpeedDisplay {
         setGameSpeed(refreshSpeed);
     }
 
+    public void restart() {
+        this.gridWidth = game.gameBoard.getWidth()+2;
+        this.gridHeight = game.gameBoard.getHeight()+2;
+
+        setPreferredSize(new Dimension(gridWidth * TILE_SIZE, gridHeight * TILE_SIZE));
+        setBackground(Color.BLACK);
+        setFocusable(true);
+
+        observers.clear();
+    }
+
     private void setGameSpeed(int refreshSpeed) {
-        if(timer != null)
-            timer.stop();
-        timer = new Timer(refreshSpeed, e -> {
-            if(!game.gameLogic.gameIsPaused()) {
+        System.out.println("Requested Speed: " + refreshSpeed);
+
+        if (timer == null) {
+            timer = new Timer(refreshSpeed, e -> {
                 notifyObservers();
-            }
-            if (game.gameLogic.gameIsOver()) {
-                timer.stop();
-            }
-        });
-        timer.start();
+            });
+            timer.start();
+        }
+        else {
+            timer.setDelay(refreshSpeed);
+            timer.setInitialDelay(0);
+            timer.restart();
+            System.out.println("Timer Delay is now: " + timer.getDelay());
+        }
     }
 
     private void notifyKeyObservers(KeyEvent event) {
@@ -189,6 +202,7 @@ public class JavaXSwingPanel extends JPanel implements IDynamicSpeedDisplay {
         observers.remove(observer);
     }
 
-
-
+    public void close() {
+        timer.stop();
+    }
 }
