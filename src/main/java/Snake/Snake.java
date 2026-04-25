@@ -11,20 +11,22 @@ public class Snake {
     public static enum Direction { UP, DOWN, LEFT, RIGHT }
     public static List<Color> colorPattern;
 
-    private LinkedList<Point> body;
-    private Direction currentDirection;
-    private Direction nextDirection;
-    private int growTicks;
+    protected LinkedList<Point> body;
+    protected Direction currentDirection;
+    protected Direction nextDirection;
+    protected int growTicks;
+    protected int DEFAULT_SIZE = 2;
 
-    private Game game;
+    protected Game game;
 
     public Snake(Game game) {
+        this.game = game;
         body = new LinkedList<>();
         body.add(new Point(1,1));
         currentDirection = Direction.RIGHT;
         nextDirection = currentDirection;
         colorPattern = List.of(Color.green, new Color(0,150,0));
-        growTicks = 2;
+        growTicks = DEFAULT_SIZE;
     }
 
     public void restart() {
@@ -32,7 +34,7 @@ public class Snake {
         body.add(new Point(1,1));
         currentDirection = Direction.RIGHT;
         nextDirection = currentDirection;
-        growTicks = 2;
+        growTicks = DEFAULT_SIZE;
 
     }
 
@@ -58,7 +60,9 @@ public class Snake {
     }
 
     public void grow(int growthAmount) {
-        growTicks += growthAmount;
+        if(canGrow()) {
+            growTicks += growthAmount;
+        }
     }
 
     public boolean setNextDirection(Direction direction) {
@@ -78,5 +82,10 @@ public class Snake {
     public LinkedList<Point> getBodyPositions() { return body; }
     public Point getHead() { return body.getFirst(); }
     public int getSize() { return body.size() + growTicks; }
+
+    public void interactAction() {} //needed for snakes that have special interaction actions
+    public boolean canGrow() { return true;}
+
+
 
 }

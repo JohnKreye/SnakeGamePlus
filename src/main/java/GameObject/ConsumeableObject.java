@@ -11,6 +11,7 @@ public abstract class ConsumeableObject extends GameObject {
     }
 
     public void interact(Game game) {
+        game.snake.interactAction();
         applyEffectTo(game.snake);
         game.gameLogic.removeConsumableObject(this);
     }
