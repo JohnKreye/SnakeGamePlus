@@ -23,6 +23,7 @@ public abstract class GameLogic implements IKeyObserver {
     protected boolean gamePaused = false;
 
     public GameLogic(Game game) {
+        random.setSeed(System.currentTimeMillis());
         this.game = game;
     }
 
@@ -40,6 +41,7 @@ public abstract class GameLogic implements IKeyObserver {
             case KeyEvent.VK_LEFT: game.snake.setNextDirection(Snake.Direction.LEFT); break;
             case KeyEvent.VK_RIGHT: game.snake.setNextDirection(Snake.Direction.RIGHT); break;
             case KeyEvent.VK_SPACE: if (gameOver) restart(); break;
+            case KeyEvent.VK_ESCAPE: gamePaused = !gamePaused; break;
         }
     }
 
@@ -73,6 +75,8 @@ public abstract class GameLogic implements IKeyObserver {
     protected void restart() {
         score = STARTING_SCORE;
         game.snake.restart();
+        game.gameDisplay.restartDisplay();
+        game.gameBoard.restart();
         gameOver = false;
         playGame();
     }
@@ -92,6 +96,9 @@ public abstract class GameLogic implements IKeyObserver {
     }
 
     public void addScore(int score) {
+        addScoreAction();
         this.score += score;
     }
+
+    protected abstract void addScoreAction();
 }
