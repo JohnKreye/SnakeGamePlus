@@ -17,7 +17,7 @@ public class GameFactory {
     public Game newRampUpGame() {
         return new GameBuilder()
                 .addObstacleDodgeLogic()
-                .addRingGameBoard(45, 35)
+                .addRingGameBoard(5, 5)
                 .addAcceleratingSnake()
                 .addJavaXSwingDisplay()
                 .addTimerEngine()

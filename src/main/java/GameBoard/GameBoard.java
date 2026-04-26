@@ -27,7 +27,7 @@ public class GameBoard {
     protected void constructGameBoard(int boardWidth, int boardHeight) {
         for(int row = 0; row < boardHeight; row++) {
             int column = 0;
-            for(; column < boardWidth - 5; column += 5) {
+            for(; column < boardWidth - 4; column += 5) {
                 validPointMap.put(new Point(column + 0, row), true);
                 validPointMap.put(new Point(column + 1, row), true);
                 validPointMap.put(new Point(column + 2, row), true);

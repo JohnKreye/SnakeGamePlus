@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import org.apache.commons.collections4.CollectionUtils;
 
 public class MazeGameBoard extends GameBoard {
     private int tunnelWidth;
@@ -22,7 +23,7 @@ public class MazeGameBoard extends GameBoard {
         //First, set all map points to invalid, so that the maze can be carved.
         for(int row = 0; row < boardHeight; row++) {
             int column = 0;
-            for(; column < boardWidth - 5; column += 5) {
+            for(; column < boardWidth - 4; column += 5) {
                 validPointMap.put(new Point(column + 0, row), false);
                 validPointMap.put(new Point(column + 1, row), false);
                 validPointMap.put(new Point(column + 2, row), false);
