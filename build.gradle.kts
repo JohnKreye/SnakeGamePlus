@@ -27,6 +27,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("com.github.kwhat:jnativehook:2.2.2")
     implementation("org.jline:jline:4.0.0")
+    implementation("org.apache.commons:commons-collections4:4.5.0")
 }
 
 tasks.test {

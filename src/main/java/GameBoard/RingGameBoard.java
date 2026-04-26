@@ -15,8 +15,8 @@ public class RingGameBoard extends GameBoard {
         int minDimension = Math.min(boardHeight, boardWidth);
         int holeOffset = minDimension/5;
         if (
-            (point.x > holeOffset && point.x < boardWidth - holeOffset) &&
-            (point.y > holeOffset && point.y < boardHeight - holeOffset)
+            (point.x > holeOffset - 1 && point.x < boardWidth - holeOffset) &&
+            (point.y > holeOffset - 1 && point.y < boardHeight - holeOffset)
         ) {
             validPointMap.put(point, false);
         }
@@ -30,7 +30,7 @@ public class RingGameBoard extends GameBoard {
     protected void constructGameBoard(int boardWidth, int boardHeight) {
         for(int row = 0; row < boardHeight; row++) {
             int column = 0;
-            for(; column < boardWidth - 5; column += 5) {
+            for(; column < boardWidth - 4; column += 5) {
                 computePointValidness(new Point(column + 0, row));
                 computePointValidness(new Point(column + 1, row));
                 computePointValidness(new Point(column + 2, row));
