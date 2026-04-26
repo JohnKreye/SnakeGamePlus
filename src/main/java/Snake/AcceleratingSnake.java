@@ -1,7 +1,7 @@
 package Snake;
 
 import Game.Game;
-import GameDisplay.IDynamicSpeedDisplay;
+import GameEngine.GameEngine;
 
 import java.awt.*;
 import java.util.List;
@@ -21,12 +21,12 @@ public class AcceleratingSnake extends Snake {
     @Override
     public void interactAction() {
         //This snake can only be used with dynamic speed displays so this conversion is safe
-        IDynamicSpeedDisplay dynamicSpeedDisplay = (IDynamicSpeedDisplay) game.gameDisplay;
-        int previousSpeed= dynamicSpeedDisplay.getSpeed();
+        GameEngine gameEngine = game.gameEngine;
+        int previousSpeed= gameEngine.getSpeed();
         int newSpeed = Math.max((int)(previousSpeed * SPEED_MULTIPLIER), SPEED_FLOOR);
         newSpeed = Math.min(newSpeed, SPEED_CEILING);
 
-        dynamicSpeedDisplay.changeSpeed(newSpeed);
+        gameEngine.setSpeed(newSpeed);
     }
 
     @Override

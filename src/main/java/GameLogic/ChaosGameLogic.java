@@ -2,8 +2,8 @@ package GameLogic;
 
 import Game.Game;
 import GameBoard.*;
+import GameDisplay.IGameDisplay;
 import GameDisplay.JavaXSwingDisplay;
-import GameObject.ConsumeableObject;
 import Snake.TransformingSnake;
 import Snake.*;
 
@@ -36,13 +36,13 @@ public class ChaosGameLogic extends DecoratedGameLogic {
     public ChaosGameLogic(Game game) {
         super(game, null);
         innerGameLogic = getRandomGameLogic();
-        game.gameDisplay = new JavaXSwingDisplay(game);
+        game.gameDisplays.add(new JavaXSwingDisplay(game));
         game.gameBoard = getRandomGameBoard();
         game.snake = new TransformingSnake(getRandomSnake());
     }
 
     @Override
-    protected void restart() {
+    public void restart() {
         score = STARTING_SCORE;
 
         TransformingSnake transformingSnake = (TransformingSnake) game.snake;
@@ -52,7 +52,9 @@ public class ChaosGameLogic extends DecoratedGameLogic {
         innerGameLogic = getRandomGameLogic();
         game.gameBoard = getRandomGameBoard();
 
-        game.gameDisplay.restartDisplay();
+        for(IGameDisplay display : game.gameDisplays) {
+            display.restartDisplay();
+        }
 
         innerGameLogic.gameOver = false;
         playGame();
@@ -68,8 +70,8 @@ public class ChaosGameLogic extends DecoratedGameLogic {
     }
 
     @Override
-    public void keyPressed(KeyEvent event) {
-        switch (event.getKeyCode()) {
+    public void keyPressed(int keyCode) {
+        switch (keyCode) {
             case KeyEvent.VK_UP: game.snake.setNextDirection(Snake.Direction.UP); break;
             case KeyEvent.VK_DOWN: game.snake.setNextDirection(Snake.Direction.DOWN); break;
             case KeyEvent.VK_LEFT: game.snake.setNextDirection(Snake.Direction.LEFT); break;
