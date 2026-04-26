@@ -10,7 +10,10 @@ public class Application {
             "Standard",
             "Ramp up",
             "Maze crawler",
-            "Chaos"
+            "Chaos",
+            "Console controlled",
+            "Fully console based",
+            "Timer with console display"
     );
 
     public static void main(String[] args) {
@@ -24,7 +27,7 @@ public class Application {
 
         String gameModeString = getGameModeInput();
         Game game = selectGameMode(gameModeString);
-        SwingUtilities.invokeLater(game::playGame);
+        SwingUtilities.invokeLater(game.gameEngine::startGame);
 
     }
 
@@ -47,7 +50,7 @@ public class Application {
     private static String displayStringGameModes() {
         String output = "";
         for (String gameMode : GAME_MODES) {
-            output = output + gameMode + "\n";
+            output = "-" + output + gameMode + "\n";
         }
         //extra newline removal
         output = output.substring(0, output.length() - 1);
@@ -64,6 +67,12 @@ public class Application {
                 return gameFactory.newMazeCrawlerGame();
             case "chaos":
                 return gameFactory.newChaosGame();
+            case "console controlled":
+                return gameFactory.newConsoleControlled();
+            case "fully console based":
+                return gameFactory.newFullyConsoleBased();
+            case "timer with console display":
+                return gameFactory.newTimerWithConsoleDisplay();
             case null, default:
                 throw new RuntimeException("Error: \"" + gameMode + "\" is not a registered game mode. Registered game modes are as follows:\n" + displayStringGameModes());
         }
@@ -71,6 +80,7 @@ public class Application {
 
     private static String getGameModeInput() {
         System.out.print("Please select one of the following game modes:\n" + displayStringGameModes() + "\n>");
+        System.out.flush();
         String input = null;
         List<String> lowerCaseGameModes = GAME_MODES.stream().map(String::toLowerCase).toList();
         while (true) {
@@ -81,6 +91,7 @@ public class Application {
             }
             else {
                 System.out.print(input + " is not a valid game mode. Please try again. Input is not case sensitive.\n>");
+                System.out.flush();
             }
         }
         return input;
