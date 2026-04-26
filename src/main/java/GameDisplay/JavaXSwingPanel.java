@@ -7,8 +7,6 @@ import Snake.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,30 +29,30 @@ public class JavaXSwingPanel extends JPanel {
         FontMetrics fontMetrics = graphics.getFontMetrics();
         super.paintComponent(graphics);
 
-        drawValidTiles(graphics);
+        drawBackgroundTiles(graphics);
         drawGameObjects(graphics);
         drawSnake(graphics);
         drawText(graphics, fontMetrics);
 
     }
 
-    private void drawValidTiles(Graphics graphics) {
+    private void drawBackgroundTiles(Graphics graphics) {
         List<Point> validPoints = game.gameBoard.getValidPositions();
         int size = validPoints.size();
         int index = 0;
         for(; index < size - 5; index += 5) {
-            drawValidTile(validPoints.get(index + 0), graphics);
-            drawValidTile(validPoints.get(index + 1), graphics);
-            drawValidTile(validPoints.get(index + 2), graphics);
-            drawValidTile(validPoints.get(index + 3), graphics);
-            drawValidTile(validPoints.get(index + 4), graphics);
+            drawBackgroundTile(validPoints.get(index + 0), graphics);
+            drawBackgroundTile(validPoints.get(index + 1), graphics);
+            drawBackgroundTile(validPoints.get(index + 2), graphics);
+            drawBackgroundTile(validPoints.get(index + 3), graphics);
+            drawBackgroundTile(validPoints.get(index + 4), graphics);
         }
         for(; index < size; index ++) {
-            drawValidTile(validPoints.get(index), graphics);
+            drawBackgroundTile(validPoints.get(index), graphics);
         }
     }
 
-    private void drawValidTile(Point point, Graphics graphics) {
+    private void drawBackgroundTile(Point point, Graphics graphics) {
         //even summed coordinates will have different color from odd summed coordinates
         //in other words a checkered pattern
         Color color1 = Color.DARK_GRAY.darker();
@@ -63,9 +61,9 @@ public class JavaXSwingPanel extends JPanel {
 
 
         if(coordinateSum % 2 == 0)
-            drawPoint(point, color1, graphics);
+            drawTile(point, color1, graphics);
         else
-            drawPoint(point, color2, graphics);
+            drawTile(point, color2, graphics);
     }
 
     private void drawText(Graphics graphics, FontMetrics fontMetrics) {
@@ -91,7 +89,7 @@ public class JavaXSwingPanel extends JPanel {
         int colorIndex = 0;
 
         for (Point bodyPartPosition : snake.getBodyPositions()) {
-            drawPoint(bodyPartPosition, snakeColorPattern.get(colorIndex), graphics);
+            drawTile(bodyPartPosition, snakeColorPattern.get(colorIndex), graphics);
             colorIndex ++;
 
             if (colorIndex >= totalColors) {
@@ -104,11 +102,11 @@ public class JavaXSwingPanel extends JPanel {
         List<GameObject> gameObjects = game.gameBoard.getGameObjects();
         for (GameObject gameObject : gameObjects) {
             Point objectPosition = gameObject.getPosition();
-            drawPoint(objectPosition, gameObject.getColor(), graphics);
+            drawTile(objectPosition, gameObject.getColor(), graphics);
         }
     }
 
-    private void drawPoint(Point point, Color color, Graphics graphics) {
+    private void drawTile(Point point, Color color, Graphics graphics) {
         point = new Point(point.x + 1, point.y +1); //added a black border, so everything will be offset
         graphics.setColor(color);
         graphics.fillRect(point.x * TILE_SIZE, point.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
@@ -122,11 +120,7 @@ public class JavaXSwingPanel extends JPanel {
         return gridHeight * TILE_SIZE;
     }
 
-    public void changeSpeed(int speed) {
-        setGameSpeed(speed);
-    }
-
-    public JavaXSwingPanel(Game game, int refreshSpeed) {
+    public JavaXSwingPanel(Game game) {
         this.game = game;
         this.gridWidth = game.gameBoard.getWidth()+2;
         this.gridHeight = game.gameBoard.getHeight()+2;
@@ -134,72 +128,14 @@ public class JavaXSwingPanel extends JPanel {
         setPreferredSize(new Dimension(gridWidth * TILE_SIZE, gridHeight * TILE_SIZE));
         setBackground(Color.BLACK);
         setFocusable(true);
-
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent event) {
-                notifyKeyObservers(event);
-            }
-        });
-
-        //Start game loop
-        setGameSpeed(refreshSpeed);
     }
 
     public void restart() {
         this.gridWidth = game.gameBoard.getWidth()+2;
         this.gridHeight = game.gameBoard.getHeight()+2;
-
         setPreferredSize(new Dimension(gridWidth * TILE_SIZE, gridHeight * TILE_SIZE));
         setBackground(Color.BLACK);
         setFocusable(true);
-
-        observers.clear();
-    }
-
-    private void setGameSpeed(int refreshSpeed) {
-        System.out.println("Requested Speed: " + refreshSpeed);
-
-        if (timer == null) {
-            timer = new Timer(refreshSpeed, e -> {
-                notifyObservers();
-            });
-            timer.start();
-        }
-        else {
-            timer.setDelay(refreshSpeed);
-            timer.setInitialDelay(0);
-            timer.restart();
-            System.out.println("Timer Delay is now: " + timer.getDelay());
-        }
-    }
-
-    private void notifyKeyObservers(KeyEvent event) {
-        for(IKeyObserver keyObserver : keyObservers) {
-            keyObserver.keyPressed(event);
-        }
-    }
-
-    public void notifyObservers() {
-        for(IObserver observer : observers) {
-            observer.update();
-        }
-    }
-
-    public void addKeyObserver(IKeyObserver keyObserver) {
-        keyObservers.add(keyObserver);
-    }
-
-    public void addObserver(IObserver observer) {
-        observers.add(observer);
-    }
-
-    public void removeKeyObserver(IKeyObserver keyObserver) {
-        keyObservers.remove(keyObserver);
-    }
-
-    public void removeObserver(IObserver observer) {
-        observers.remove(observer);
     }
 
     public void close() {

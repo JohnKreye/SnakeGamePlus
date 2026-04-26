@@ -2,6 +2,7 @@ package GameLogic;
 
 import Game.Game;
 import GameObject.ConsumeableObject;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -20,8 +21,8 @@ public abstract class DecoratedGameLogic extends GameLogic {
     }
 
     @Override
-    public void keyPressed(KeyEvent event) {
-        innerGameLogic.keyPressed(event);
+    public void keyPressed(int keyCode) {
+        innerGameLogic.keyPressed(keyCode);
     }
 
     @Override
@@ -40,7 +41,7 @@ public abstract class DecoratedGameLogic extends GameLogic {
     }
 
     @Override
-    protected void restart() {
+    public void restart() {
         innerGameLogic.restart();
     }
 
