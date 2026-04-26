@@ -2,13 +2,19 @@ package Game;
 
 import GameBoard.*;
 import GameDisplay.*;
+import GameEngine.GameEngine;
+import GameEngine.*;
 import GameLogic.*;
 import Snake.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
     public GameLogic gameLogic;
     public GameBoard gameBoard;
-    public IGameDisplay gameDisplay;
+    public List<IGameDisplay> gameDisplays = new ArrayList<>();
+    public GameEngine gameEngine;
     public Snake snake;
 
     private boolean directionQueued = false;
@@ -36,7 +42,7 @@ public class Game {
 
             boolean logicNull = newGame.gameLogic == null;
             boolean boardNull = newGame.gameBoard == null;
-            boolean displayNull = newGame.gameDisplay == null;
+            boolean displayNull = newGame.gameDisplays.isEmpty();
             boolean snakeNull = newGame.snake == null;
 
             if(logicNull || boardNull || displayNull | snakeNull) {
@@ -90,7 +96,7 @@ public class Game {
         }
 
         public GameBuilder addJavaXSwingDisplay() {
-            newGame.gameDisplay = new JavaXSwingDisplay(newGame);
+            newGame.gameDisplays.add(new JavaXSwingDisplay(newGame));
             return this;
         }
 
@@ -126,7 +132,28 @@ public class Game {
 
         public Game createNewChaosGame() {
             newGame.gameLogic = new ChaosGameLogic(newGame);
+            newGame.gameEngine = new TimerEngine(newGame);
             return build();
+        }
+
+        public GameBuilder addTimerEngine() {
+            newGame.gameEngine = new TimerEngine(newGame);
+            return this;
+        }
+
+        public GameBuilder addTimerEngine(int refreshRate) {
+            newGame.gameEngine = new TimerEngine(newGame, refreshRate);
+            return this;
+        }
+
+        public GameBuilder addConsoleEngine() {
+            newGame.gameEngine = new ConsoleEngine(newGame);
+            return this;
+        }
+
+        public GameBuilder addConsoleDisplay() {
+            newGame.gameDisplays.add(new ConsoleDisplay(newGame));
+            return this;
         }
     }
 }
