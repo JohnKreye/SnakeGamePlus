@@ -10,6 +10,7 @@ public class GameFactory {
                 .addSquareGameBoard(30)
                 .addStandardSnake()
                 .addJavaXSwingDisplay()
+                .addTimerEngine()
                 .build();
     }
 
@@ -19,6 +20,7 @@ public class GameFactory {
                 .addRingGameBoard(45, 35)
                 .addAcceleratingSnake()
                 .addJavaXSwingDisplay()
+                .addTimerEngine()
                 .build();
     }
 
@@ -28,10 +30,42 @@ public class GameFactory {
                 .addMazeGameBoard(19,19,3)
                 .addStandardSnake()
                 .addJavaXSwingDisplay()
+                .addTimerEngine()
                 .build();
     }
 
     public Game newChaosGame() {
         return new GameBuilder().createNewChaosGame();
     }
+
+    public Game newConsoleControlled() {
+        return new GameBuilder()
+                .addStandardGameLogic()
+                .addGameBoard(10,10)
+                .addStandardSnake()
+                .addJavaXSwingDisplay()
+                .addConsoleEngine()
+                .build();
+    }
+
+    public Game newFullyConsoleBased() {
+        return new GameBuilder()
+                .addStandardGameLogic()
+                .addGameBoard(10, 10)
+                .addStandardSnake()
+                .addConsoleDisplay()
+                .addConsoleEngine()
+                .build();
+    }
+
+    public Game newTimerWithConsoleDisplay() {
+        return new GameBuilder()
+                .addStandardGameLogic()
+                .addGameBoard(10, 10)
+                .addStandardSnake()
+                .addConsoleDisplay()
+                .addTimerEngine(400)
+                .build();
+    }
+
 }
