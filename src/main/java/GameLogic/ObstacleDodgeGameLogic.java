@@ -1,8 +1,6 @@
 package GameLogic;
 
 import Game.Game;
-import GameDisplay.IDynamicSpeedDisplay;
-import GameObject.ConsumeableObject;
 import GameObject.GameObject;
 import GameObject.GameObstacle;
 import Snake.Snake;
@@ -17,11 +15,6 @@ public class ObstacleDodgeGameLogic extends StandardGameLogic {
     //Obstacle Dodge games are similar to standard games except they  will spawn new games whenever food is eaten
     public ObstacleDodgeGameLogic(Game game) {
         super(game);
-    }
-
-    @Override
-    public void playGame() {
-        super.playGame();
     }
 
     @Override
