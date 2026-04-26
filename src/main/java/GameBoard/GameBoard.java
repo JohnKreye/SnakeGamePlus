@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class GameBoard implements IObserver {
+public class GameBoard {
 
     protected int boardWidth;
     protected int boardHeight;
@@ -39,19 +39,6 @@ public class GameBoard implements IObserver {
             }
         }
     }
-
-    @Override
-    public void update() {
-        if (!(game.gameLogic.gameIsOver() || game.gameLogic.gameIsPaused())) {
-            game.snake.move();
-            game.gameLogic.checkCollisions();
-            game.gameLogic.checkGameObjects();
-        }
-
-        game.gameDisplay.updateDisplay();
-    }
-
-
 
     public int getWidth() { return boardWidth; }
     public int getHeight() { return boardHeight; }

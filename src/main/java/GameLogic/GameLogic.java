@@ -1,15 +1,19 @@
 package GameLogic;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
+
 import Game.*;
+import GameDisplay.IGameDisplay;
 import GameObject.*;
 import Observers.IKeyObserver;
+import Observers.IObserver;
 import Snake.Snake;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
+
 import java.util.List;
 import java.util.Random;
 
-public abstract class GameLogic implements IKeyObserver {
+public abstract class GameLogic implements IKeyObserver, IObserver {
 
     protected static int STARTING_SCORE = 0;
 
@@ -27,21 +31,28 @@ public abstract class GameLogic implements IKeyObserver {
         this.game = game;
     }
 
-    public void playGame() {
-        if(game.gameDisplay != null) {
-            game.gameDisplay.startDisplay();
+    //needed for some games
+    public void playGame() {}
+
+    @Override
+    public void keyPressed(int keyCode) {
+        switch (keyCode) {
+            case NativeKeyEvent.VC_UP: game.snake.setNextDirection(Snake.Direction.UP); break;
+            case NativeKeyEvent.VC_DOWN: game.snake.setNextDirection(Snake.Direction.DOWN); break;
+            case NativeKeyEvent.VC_LEFT: game.snake.setNextDirection(Snake.Direction.LEFT); break;
+            case NativeKeyEvent.VC_RIGHT: game.snake.setNextDirection(Snake.Direction.RIGHT); break;
+            case NativeKeyEvent.VC_ESCAPE: gamePaused = !gamePaused; break;
+            case NativeKeyEvent.VC_SPACE: if(gameOver) restart(); break;
+            case NativeKeyEvent.VC_DELETE: System.exit(0);
         }
     }
 
     @Override
-    public void keyPressed(KeyEvent event) {
-        switch (event.getKeyCode()) {
-            case KeyEvent.VK_UP: game.snake.setNextDirection(Snake.Direction.UP); break;
-            case KeyEvent.VK_DOWN: game.snake.setNextDirection(Snake.Direction.DOWN); break;
-            case KeyEvent.VK_LEFT: game.snake.setNextDirection(Snake.Direction.LEFT); break;
-            case KeyEvent.VK_RIGHT: game.snake.setNextDirection(Snake.Direction.RIGHT); break;
-            case KeyEvent.VK_SPACE: if (gameOver) restart(); break;
-            case KeyEvent.VK_ESCAPE: gamePaused = !gamePaused; break;
+    public void update() {
+        if (!(game.gameLogic.gameIsOver() || game.gameLogic.gameIsPaused())) {
+            game.snake.move();
+            game.gameLogic.checkCollisions();
+            game.gameLogic.checkGameObjects();
         }
     }
 
@@ -72,10 +83,12 @@ public abstract class GameLogic implements IKeyObserver {
         }
     }
 
-    protected void restart() {
+    public void restart() {
         score = STARTING_SCORE;
         game.snake.restart();
-        game.gameDisplay.restartDisplay();
+        for(IGameDisplay display : game.gameDisplays) {
+            display.restartDisplay();
+        }
         game.gameBoard.restart();
         gameOver = false;
         playGame();
