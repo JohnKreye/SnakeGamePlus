@@ -6,6 +6,7 @@ import GameDisplay.IGameDisplay;
 import GameDisplay.JavaXSwingDisplay;
 import Snake.TransformingSnake;
 import Snake.*;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -42,7 +43,7 @@ public class ChaosGameLogic extends DecoratedGameLogic {
     }
 
     @Override
-    public void restart() {
+     public void restart() {
         score = STARTING_SCORE;
 
         TransformingSnake transformingSnake = (TransformingSnake) game.snake;
@@ -53,7 +54,7 @@ public class ChaosGameLogic extends DecoratedGameLogic {
         game.gameBoard = getRandomGameBoard();
 
         for(IGameDisplay display : game.gameDisplays) {
-            display.restartDisplay();
+            display.restartDisplay(); //hit?
         }
 
         innerGameLogic.gameOver = false;
@@ -71,13 +72,13 @@ public class ChaosGameLogic extends DecoratedGameLogic {
 
     @Override
     public void keyPressed(int keyCode) {
-        switch (keyCode) {
-            case KeyEvent.VK_UP: game.snake.setNextDirection(Snake.Direction.UP); break;
-            case KeyEvent.VK_DOWN: game.snake.setNextDirection(Snake.Direction.DOWN); break;
-            case KeyEvent.VK_LEFT: game.snake.setNextDirection(Snake.Direction.LEFT); break;
-            case KeyEvent.VK_RIGHT: game.snake.setNextDirection(Snake.Direction.RIGHT); break;
-            case KeyEvent.VK_SPACE: if (innerGameLogic.gameOver) restart(); break;
-            case KeyEvent.VK_ESCAPE: innerGameLogic.gamePaused = !innerGameLogic.gamePaused; break;
+         switch (keyCode) {
+            case NativeKeyEvent.VC_UP: game.snake.setNextDirection(Snake.Direction.UP); break;
+            case NativeKeyEvent.VC_DOWN: game.snake.setNextDirection(Snake.Direction.DOWN); break;
+            case NativeKeyEvent.VC_LEFT: game.snake.setNextDirection(Snake.Direction.LEFT); break;
+            case NativeKeyEvent.VC_RIGHT: game.snake.setNextDirection(Snake.Direction.RIGHT); break;
+            case NativeKeyEvent.VC_SPACE: if (innerGameLogic.gameOver) this.restart(); break;
+            case NativeKeyEvent.VC_ESCAPE: innerGameLogic.gamePaused = !innerGameLogic.gamePaused; break;
         }
     }
 
