@@ -13,8 +13,10 @@ public class JavaXSwingDisplay extends JFrame implements IGameDisplay {
 
     @Override
     public void startDisplay() {
-        swingPanel = new JavaXSwingPanel(game);
-        add(swingPanel);
+        if(swingPanel == null) {
+            swingPanel = new JavaXSwingPanel(game);
+            add(swingPanel);
+        }
         revalidate();
         repaint();
         pack();
@@ -38,6 +40,7 @@ public class JavaXSwingDisplay extends JFrame implements IGameDisplay {
     @Override
     public void restartDisplay() {
         swingPanel.restart();
+        startDisplay();
     }
 
     public JavaXSwingDisplay(Game game) {
